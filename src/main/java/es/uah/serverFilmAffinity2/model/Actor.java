@@ -20,7 +20,7 @@ public class Actor {
     private String nombre;
 
     @Column(name = "fecha_nacimiento")
-    private LocalDate fechaNacimiento;
+    private String fechaNacimiento;
 
     @Column(name = "pais_nacimiento", length = 80)
     private String paisNacimiento;
@@ -45,11 +45,11 @@ public class Actor {
         this.nombre = nombre;
     }
 
-    public LocalDate getFechaNacimiento() {
+    public String getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+    public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 

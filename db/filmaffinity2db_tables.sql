@@ -1,37 +1,37 @@
-USE filmaffinity2db;
+PRAGMA foreign_keys = ON;
 
 -- ===============================
 -- ACTORES
 -- ===============================
-CREATE TABLE actores (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(120) NOT NULL,
-    fecha_nacimiento DATE,
-    pais_nacimiento VARCHAR(80)
+CREATE TABLE IF NOT EXISTS actores (
+                                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                       nombre TEXT NOT NULL,
+                                       fecha_nacimiento TEXT,
+                                       pais_nacimiento TEXT
 );
 
 -- ===============================
 -- PELICULAS
 -- ===============================
-CREATE TABLE peliculas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(200) NOT NULL,
-    anio YEAR NOT NULL,
-    duracion INT,
-    pais VARCHAR(80),
-    direccion VARCHAR(150),       -- Just a text field, not a separate table
-    genero VARCHAR(80),           -- Same: no need for a genre table
-    sinopsis TEXT,
-    portada VARCHAR(255)
+CREATE TABLE IF NOT EXISTS peliculas (
+                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                         titulo TEXT NOT NULL,
+                                         anio INTEGER NOT NULL,
+                                         duracion INTEGER,
+                                         pais TEXT,
+                                         direccion TEXT,
+                                         genero TEXT,
+                                         sinopsis TEXT,
+                                         portada TEXT
 );
 
 -- ===============================
 -- REPARTO (pelicula - actores)
 -- ===============================
-CREATE TABLE reparto (
-    pelicula_id INT NOT NULL,
-    actor_id INT NOT NULL,
-    PRIMARY KEY (pelicula_id, actor_id),
-    FOREIGN KEY (pelicula_id) REFERENCES peliculas(id) ON DELETE CASCADE,
-    FOREIGN KEY (actor_id) REFERENCES actores(id) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS reparto (
+                                       pelicula_id INTEGER NOT NULL,
+                                       actor_id INTEGER NOT NULL,
+                                       PRIMARY KEY (pelicula_id, actor_id),
+                                       FOREIGN KEY (pelicula_id) REFERENCES peliculas(id) ON DELETE CASCADE,
+                                       FOREIGN KEY (actor_id) REFERENCES actores(id) ON DELETE CASCADE
 );
