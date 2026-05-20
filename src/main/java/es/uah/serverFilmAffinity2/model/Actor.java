@@ -2,9 +2,6 @@ package es.uah.serverFilmAffinity2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 

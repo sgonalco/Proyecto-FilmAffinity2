@@ -1,27 +1,3 @@
-CREATE TABLE IF NOT EXISTS actores (
-                                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                       nombre TEXT,
-                                       fecha_nacimiento TEXT,
-                                       pais_nacimiento TEXT
-);
-
-CREATE TABLE IF NOT EXISTS peliculas (
-                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                         titulo TEXT,
-                                         anio INTEGER,
-                                         duracion INTEGER,
-                                         pais TEXT,
-                                         direccion TEXT,
-                                         genero TEXT,
-                                         sinopsis TEXT,
-                                         portada TEXT
-);
-
-CREATE TABLE IF NOT EXISTS reparto (
-                                       pelicula_id INTEGER,
-                                       actor_id INTEGER
-);
-
 INSERT INTO actores (nombre, fecha_nacimiento, pais_nacimiento) VALUES
                                                                     ('Leonardo DiCaprio', '1974-11-11', 'Estados Unidos'),
                                                                     ('Kate Winslet', '1975-10-05', 'Reino Unido'),
