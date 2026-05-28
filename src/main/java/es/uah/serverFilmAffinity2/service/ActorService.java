@@ -2,32 +2,47 @@ package es.uah.serverFilmAffinity2.service;
 
 import es.uah.serverFilmAffinity2.model.Actor;
 import es.uah.serverFilmAffinity2.DAO.ActorRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 public class ActorService {
 
-    private final ActorRepo actorRepo;
-
-    public ActorService(ActorRepo actorRepo, ActorRepo actorRepo1) {
-        this.actorRepo = actorRepo1;
-    }
+    @Autowired
+    private ActorRepo actorRepo;
 
     public List<Actor> findAll() {
-        return this.actorRepo.findAll();
+        return actorRepo.findAll();
     }
 
     public Actor findByNombre(String nombre) {
-        return actorRepo.findByNombre(nombre).orElseThrow(() -> new RuntimeException("actor name not found" + nombre));
+        return actorRepo.findByNombre(nombre)
+                .orElseThrow(() -> new RuntimeException("actor name not found" + nombre));
     }
 
     public Actor findById(Integer id) {
-        return this.actorRepo.findById(id).orElse(null);
+        return this.actorRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("actor not found with id: " + id));
+    }
+
+    public Actor save(Actor actor) {
+        if(actor == null) {
+            throw new IllegalArgumentException("actor cannot be null");
+        }
+        if (actor.getNombre() == null || actor.getNombre().isBlank()) {
+            throw new IllegalArgumentException("Actor name cannot be empty");
+        }
+        return actorRepo.save(actor);
     }
 
     public Actor updateActor(Integer id, Actor actor) {
+        if(id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
+        if(actor == null) {
+            throw new IllegalArgumentException("actor cannot be null");
+        }
         Actor existing = actorRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Actor not found with id: " + id));
 
@@ -41,16 +56,19 @@ public class ActorService {
         if (actor.getPaisNacimiento() != null) {
             existing.setPaisNacimiento(actor.getPaisNacimiento());
         }
-
         return actorRepo.save(existing); // save() updates because id already exists
     }
 
-    public Actor save(Actor actor) {
-        return this.actorRepo.save(actor);
-    }
+    public boolean deleteById(Integer id) {
+        if(id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
 
-    public void deleteById(Integer id) {
-        this.actorRepo.deleteById(id);
+        if (!actorRepo.existsById(id)) {
+            return false;
+        }
+        actorRepo.deleteById(id);
+        return true;
     }
 
 }

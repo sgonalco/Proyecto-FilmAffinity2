@@ -1,5 +1,8 @@
 package es.uah.serverFilmAffinity2.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -11,7 +14,7 @@ import es.uah.serverFilmAffinity2.service.IPeliculaService;
 public class PeliculaController {
 
     @Autowired
-    IPeliculaService peliculaService;
+    private IPeliculaService peliculaService;
 
     @GetMapping("/peliculas")
     public List<Pelicula> buscarTodos(){
@@ -44,12 +47,12 @@ public class PeliculaController {
     }
 
     @PutMapping("/peliculas")
-    public void actualizarPelicula(@RequestBody Pelicula pelicula){
+    public void actualizarPelicula(@Valid @RequestBody Pelicula pelicula){
         peliculaService.actualizarPelicula(pelicula);
     }
 
     @PostMapping("/peliculas")
-    public void guardarPelicula(@RequestBody Pelicula pelicula){
+    public void guardarPelicula(@Valid @RequestBody Pelicula pelicula){
         peliculaService.guardarPelicula(pelicula);
     }
 

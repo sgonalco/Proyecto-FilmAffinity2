@@ -94,6 +94,17 @@
 			<artifactId>hibernate-community-dialects</artifactId>
 			<version>6.6.29.Final</version>
 		</dependency>
+		<!-- Flyway Core -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>10.20.1</version>
+		</dependency>
+		<!-- VALIDATION -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

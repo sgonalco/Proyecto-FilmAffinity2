@@ -1,20 +1,20 @@
 package es.uah.serverFilmAffinity2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import jakarta.persistence.*;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-@Table(name = "actores")
-public class Actor {
+@Table(name = "directores")
+public class Director {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @NotBlank(message = "Actor name cannot be empty")
+    @NotBlank(message = "name cannot be blank")
     @Size(max = 120)
     @Column(name = "nombre", nullable = false)
     private String nombre;
@@ -22,11 +22,11 @@ public class Actor {
     @Column(name = "fecha_nacimiento")
     private String fechaNacimiento;
 
-    @Column(name = "pais_nacimiento", length = 80)
-    private String paisNacimiento;
-
-    @ManyToMany(mappedBy = "actores")
-    @JsonIgnoreProperties("actores")
+    @ManyToMany
+    @JsonIgnoreProperties("directores")
+    @JoinTable(name = "pelicula_director",
+                joinColumns = @JoinColumn(name = "director_id"),
+                inverseJoinColumns = @JoinColumn(name = "pelicula_id"))
     private List<Pelicula> peliculas;
 
     public Integer getId() {
@@ -53,14 +53,6 @@ public class Actor {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public String getPaisNacimiento() {
-        return paisNacimiento;
-    }
-
-    public void setPaisNacimiento(String paisNacimiento) {
-        this.paisNacimiento = paisNacimiento;
-    }
-
     public List<Pelicula> getPeliculas() {
         return peliculas;
     }
@@ -68,24 +60,4 @@ public class Actor {
     public void setPeliculas(List<Pelicula> peliculas) {
         this.peliculas = peliculas;
     }
-
-    public void addPelicula(Pelicula pelicula) {
-        if (pelicula != null){
-            getPeliculas().add(pelicula);
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Actor actor = (Actor) o;
-        return Objects.equals(id, actor.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
 }

@@ -5,47 +5,122 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 import es.uah.serverFilmAffinity2.service.ActorService;
+import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/actores")
 public class ActorController {
 
-    private final ActorService actorService;
-
-    public ActorController(ActorService actorService) {
-        this.actorService = actorService;
-    }
+    @Autowired
+    private ActorService actorService;
 
     @GetMapping // find all
-    public List<Actor> getAll() {
-        return actorService.findAll();
+    public ResponseEntity<?> getAll() {
+        try{
+            List actores = actorService.findAll();
+            if(actores.isEmpty()){
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("lista de actores vacia");
+            }
+            return ResponseEntity.ok(actores);
+        }catch(Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error oucurred" + e.getMessage());
+        }
     }
 
-    @GetMapping("/{id}") // find by id
-    public Actor getById(@PathVariable Integer id) {
-        return actorService.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable Integer id) {
+        try {
+            Actor actor = actorService.findById(id);
+
+            if (actor == null) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("Actor not found with id: " + id);
+            }
+            return ResponseEntity.ok(actor);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
+        }
     }
 
     @GetMapping("/nombre/{nombre}") // find by name
-    public Actor getByName(@PathVariable String nombre) {
-        return  actorService.findByNombre(nombre);
+    public ResponseEntity<?> getByName(@PathVariable String nombre) {
+        try{
+            Actor actor = actorService.findByNombre(nombre);
+            if (actor == null) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("Actor not found with name: " + nombre);
+            }
+            return ResponseEntity.ok(actor);
+        }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error ocurred: " + e.getMessage());
+        }
     }
 
     @PostMapping("/crear") // create new actor
-    public Actor createActor(@RequestBody Actor actor) {
-        return actorService.save(actor);
+    public ResponseEntity<?> createActor(@Valid @RequestBody Actor actor) {
+        try {
+            if (actor == null) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("Actor data cannot be null");
+            }
+            Actor savedActor = actorService.save(actor);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(savedActor);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}") // update existing using id
-    public ResponseEntity<Actor> updateActor(@PathVariable Integer id, @RequestBody Actor actor) {
-        Actor actorActualizado = actorService.updateActor(id, actor);
-        return ResponseEntity.ok(actorActualizado);
+    public ResponseEntity<?> updateActor(@Valid @PathVariable Integer id, @RequestBody Actor actor) {
+        try{
+            Actor updatedActor = actorService.updateActor(id, actor);
+            if(updatedActor == null) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("Actor not found with id: " + id);
+            }
+            return ResponseEntity.ok(updatedActor);
+        }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
+        }
     }
 
-    @DeleteMapping("/delete") // delete existing using id
-    public void deleteActor(@RequestBody Actor actor) {
-        actorService.deleteById(actor.getId());
+    @DeleteMapping("/{id}") // delete existing using id
+    public ResponseEntity<?> deleteActor(@PathVariable Integer id) {
+        try{
+            boolean deletedActor = actorService.deleteById(id);
+            if(!deletedActor) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("Actor not found with id: " + id);
+            }
+            return  ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .body("Actor has been deleted");
+        }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred: " + e.getMessage());
+        }
     }
 }

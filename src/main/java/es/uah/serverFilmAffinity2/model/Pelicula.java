@@ -3,7 +3,7 @@ package es.uah.serverFilmAffinity2.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.List;
-
+import jakarta.validation.constraints.*;
 import java.util.Objects;
 
 @Entity
@@ -14,6 +14,7 @@ public class Pelicula {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @NotBlank(message = "title cannot be blank")
     @Column(name = "titulo", nullable = false, length = 200)
     private String titulo;
 
@@ -45,6 +46,11 @@ public class Pelicula {
                 joinColumns = @JoinColumn(name = "pelicula_id"),
                 inverseJoinColumns = @JoinColumn(name = "actor_id"))
     private List<Actor> actores;
+
+    @ManyToMany(mappedBy = "peliculas")
+    @JsonIgnoreProperties("peliculas")
+    private List<Director> directores;
+
 
     public Integer getId() {
         return id;
