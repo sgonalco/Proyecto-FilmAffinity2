@@ -1,7 +1,6 @@
 package es.uah.serverFilmAffinity2.controller;
 
 import es.uah.serverFilmAffinity2.service.DirectorService;
-import org.springframework.http.RequestEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

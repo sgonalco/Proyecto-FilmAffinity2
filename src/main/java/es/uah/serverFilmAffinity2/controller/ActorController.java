@@ -20,7 +20,7 @@ public class ActorController {
     @GetMapping // find all
     public ResponseEntity<?> getAll() {
         try{
-            List actores = actorService.findAll();
+            List<Actor> actores = actorService.findAll();
             if(actores.isEmpty()){
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
