@@ -1,5 +1,6 @@
 package es.uah.serverFilmAffinity2.controller;
 
+import es.uah.serverFilmAffinity2.DTO.ActorDTO;
 import es.uah.serverFilmAffinity2.model.Actor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,91 +19,28 @@ public class ActorController {
     private ActorService actorService;
 
     @GetMapping // find all
-    public ResponseEntity<?> getAll() {
-        try{
-            List<Actor> actores = actorService.findAll();
-            if(actores.isEmpty()){
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body("lista de actores vacia");
-            }
-            return ResponseEntity.ok(actores);
-        }catch(Exception e){
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error oucurred" + e.getMessage());
-        }
+    public List<ActorDTO> getAll() {
+        return actorService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Integer id) {
-        try {
-            Actor actor = actorService.findById(id);
-
-            if (actor == null) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body("Actor not found with id: " + id);
-            }
-            return ResponseEntity.ok(actor);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred: " + e.getMessage());
-        }
+    public ActorDTO getById(@PathVariable Integer id) {
+        return  actorService.findById(id);
     }
 
     @GetMapping("/nombre/{nombre}") // find by name
-    public ResponseEntity<?> getByName(@PathVariable String nombre) {
-        try{
-            Actor actor = actorService.findByNombre(nombre);
-            if (actor == null) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body("Actor not found with name: " + nombre);
-            }
-            return ResponseEntity.ok(actor);
-        }catch (Exception e){
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error ocurred: " + e.getMessage());
-        }
+    public ActorDTO getByName(@PathVariable String nombre) {
+        return actorService.findByNombre(nombre);
     }
 
     @PostMapping("/crear") // create new actor
-    public ResponseEntity<?> createActor(@Valid @RequestBody Actor actor) {
-        try {
-            if (actor == null) {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body("Actor data cannot be null");
-            }
-            Actor savedActor = actorService.save(actor);
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(savedActor);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred: " + e.getMessage());
-        }
+    public ActorDTO createActor(@Valid @RequestBody ActorDTO actordto) {
+        return actorService.save(actordto);
     }
 
     @PutMapping("/{id}") // update existing using id
-    public ResponseEntity<?> updateActor(@Valid @PathVariable Integer id, @RequestBody Actor actor) {
-        try{
-            Actor updatedActor = actorService.updateActor(id, actor);
-            if(updatedActor == null) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body("Actor not found with id: " + id);
-            }
-            return ResponseEntity.ok(updatedActor);
-        }catch (Exception e){
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred: " + e.getMessage());
-        }
+    public ActorDTO updateActor(@Valid @PathVariable Integer id, @RequestBody ActorDTO actordto) {
+        return actorService.updateActor(id, actordto);
     }
 
     @DeleteMapping("/{id}") // delete existing using id

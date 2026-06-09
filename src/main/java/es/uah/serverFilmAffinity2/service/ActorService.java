@@ -1,9 +1,11 @@
 package es.uah.serverFilmAffinity2.service;
 
+import es.uah.serverFilmAffinity2.DTO.ActorDTO;
 import es.uah.serverFilmAffinity2.model.Actor;
 import es.uah.serverFilmAffinity2.DAO.ActorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -12,51 +14,70 @@ public class ActorService {
     @Autowired
     private ActorRepo actorRepo;
 
-    public List<Actor> findAll() {
-        return actorRepo.findAll();
+    public List<ActorDTO> findAll() {
+        List<Actor> actores = actorRepo.findAll();
+        return actores.stream()
+                .map(actor -> new ActorDTO(
+                        actor.getNombre(),
+                        actor.getFechaNacimiento(),
+                        actor.getPaisNacimiento(),
+                        actor.getPeliculas()))
+                .toList();
     }
 
-    public Actor findByNombre(String nombre) {
-        return actorRepo.findByNombre(nombre)
-                .orElseThrow(() -> new RuntimeException("actor name not found" + nombre));
+    public ActorDTO findByNombre(String nombre) {
+        Actor actor = actorRepo.findByNombre(nombre)
+                .orElseThrow(() -> new RuntimeException("Actor no encontrado"));
+        ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
+                actor.getFechaNacimiento(),
+                actor.getPaisNacimiento(),
+                actor.getPeliculas());
+        return actorDTO;
     }
 
-    public Actor findById(Integer id) {
-        return this.actorRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("actor not found with id: " + id));
+    public ActorDTO findById(Integer id) {
+        Actor actor = actorRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Actor no encontrado"));
+        ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
+                actor.getFechaNacimiento(),
+                actor.getPaisNacimiento(),
+                actor.getPeliculas());
+        return actorDTO;
     }
 
-    public Actor save(Actor actor) {
-        if(actor == null) {
-            throw new IllegalArgumentException("actor cannot be null");
-        }
-        if (actor.getNombre() == null || actor.getNombre().isBlank()) {
-            throw new IllegalArgumentException("Actor name cannot be empty");
-        }
-        return actorRepo.save(actor);
+    public ActorDTO save(ActorDTO actordto) {
+        Actor actor = new Actor();
+        actor.setNombre(actordto.getNombre());
+        actor.setPaisNacimiento(actordto.getPaisNacimiento());
+        actor.setFechaNacimiento(actordto.getFechanacimiento());
+        actor.setPeliculas(actordto.getPeliculas());
+
+        Actor savedActor = actorRepo.save(actor);
+
+        return new ActorDTO(
+                savedActor.getNombre(),
+                savedActor.getFechaNacimiento(),
+                savedActor.getPaisNacimiento(),
+                savedActor.getPeliculas()
+        );
     }
 
-    public Actor updateActor(Integer id, Actor actor) {
-        if(id == null) {
-            throw new IllegalArgumentException("id cannot be null");
-        }
-        if(actor == null) {
-            throw new IllegalArgumentException("actor cannot be null");
-        }
+    public ActorDTO updateActor(Integer id, ActorDTO actordto) {
         Actor existing = actorRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Actor not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Actor no encontrado"));
+        existing.setNombre(actordto.getNombre());
+        existing.setPaisNacimiento(actordto.getPaisNacimiento());
+        existing.setFechaNacimiento(actordto.getFechanacimiento());
+        existing.setPeliculas(actordto.getPeliculas());
 
-        // Only overwrite fields that were actually sent
-        if (actor.getNombre() != null) {
-            existing.setNombre(actor.getNombre());
-        }
-        if (actor.getFechaNacimiento() != null) {
-            existing.setFechaNacimiento(actor.getFechaNacimiento());
-        }
-        if (actor.getPaisNacimiento() != null) {
-            existing.setPaisNacimiento(actor.getPaisNacimiento());
-        }
-        return actorRepo.save(existing); // save() updates because id already exists
+        Actor savedActor = actorRepo.save(existing);
+
+        return new ActorDTO(
+                savedActor.getNombre(),
+                savedActor.getFechaNacimiento(),
+                savedActor.getPaisNacimiento(),
+                savedActor.getPeliculas()
+        );
     }
 
     public boolean deleteById(Integer id) {
