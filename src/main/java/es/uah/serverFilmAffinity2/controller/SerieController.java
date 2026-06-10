@@ -72,7 +72,7 @@ public class SerieController {
     }
 
     @PutMapping("/update/{id}")
-    public SerieDTO updateSerie(@PathVariable Integer id, @RequestBody SerieDTO serieDTO){
+    public SerieDTO update(@PathVariable Integer id, @RequestBody SerieDTO serieDTO){
         try{
             if(id == null || serieDTO == null){
                 throw new ResponseStatusException(
@@ -80,7 +80,7 @@ public class SerieController {
                         "id u objeto no pueden ser nulos"
                 );
             }
-            return serieService.save(serieDTO);
+            return serieService.update(id, serieDTO);
         }catch(Exception ex){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -90,7 +90,7 @@ public class SerieController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteSerie(@PathVariable Integer id){
+    public void delete(@PathVariable Integer id){
         try{
             if(id == null){
                 throw new ResponseStatusException(

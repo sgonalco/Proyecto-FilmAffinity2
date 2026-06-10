@@ -20,14 +20,6 @@ public class Serie {
     @Column(name = "annoEstreno")
     private String annoEstreno;
 
-    @NotBlank(message = "genero no puede estar en blanco")
-    @Column(name = "genero", nullable = false)
-    private String genero;
-
-    @NotNull(message = "número de caps no puede estar en blanco")
-    @Column(name = "numCaps", nullable = false)
-    private Integer numCaps;
-
     @ManyToMany
     @JoinTable(
             name = "series_actor",
@@ -44,6 +36,45 @@ public class Serie {
     )
     private List<Director> directores;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "series_genero",
+            joinColumns = @JoinColumn(name = "serie_id")
+    )
+    @Column(name = "genero")
+    private List<String> generos;
+
+    @OneToMany(
+            mappedBy = "serie",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Temporada> temporadas;
+
+    public List<Director> getDirectores() {
+        return directores;
+    }
+
+    public void setDirectores(List<Director> directores) {
+        this.directores = directores;
+    }
+
+    public List<String> getGeneros() {
+        return generos;
+    }
+
+    public void setGeneros(List<String> generos) {
+        this.generos = generos;
+    }
+
+    public List<Temporada> getTemporadas() {
+        return temporadas;
+    }
+
+    public void setTemporadas(List<Temporada> temporadas) {
+        this.temporadas = temporadas;
+    }
+
     public String getTitulo() {
         return titulo;
     }
@@ -58,22 +89,6 @@ public class Serie {
 
     public void setAnnoEstreno(String annoEstreno) {
         this.annoEstreno = annoEstreno;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
-
-    public Integer getNumCaps() {
-        return numCaps;
-    }
-
-    public void setNumCaps(Integer numCaps) {
-        this.numCaps = numCaps;
     }
 
     public List<Actor> getActores() {

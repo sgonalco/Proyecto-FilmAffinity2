@@ -25,10 +25,10 @@ public class SerieService {
                     s -> new SerieDTO(
                             s.getTitulo(),
                             s.getAnnoEstreno(),
-                            s.getGenero(),
-                            s.getNumCaps(),
                             s.getActores(),
-                            s.getDirectors()))
+                            s.getDirectors(),
+                            s.getTemporadas(),
+                            s.getGeneros()))
                     .toList();
         }catch(Exception e){
             throw new RuntimeException(
@@ -46,10 +46,10 @@ public class SerieService {
             SerieDTO serieDTO = new SerieDTO(
                     serie.getTitulo(),
                     serie.getAnnoEstreno(),
-                    serie.getGenero(),
-                    serie.getNumCaps(),
                     serie.getActores(),
-                    serie.getDirectors()
+                    serie.getDirectors(),
+                    serie.getTemporadas(),
+                    serie.getGeneros()
             );
             return serieDTO;
         }catch(Exception e){
@@ -69,19 +69,19 @@ public class SerieService {
             }
             serie.setTitulo(seriedto.getTitulo());
             serie.setAnnoEstreno(seriedto.getAnnoEstreno());
-            serie.setGenero(seriedto.getGenero());
-            serie.setNumCaps(seriedto.getNumCaps());
             serie.setActores(seriedto.getActores());
             serie.setDirectors(seriedto.getDirectores());
+            serie.setTemporadas(seriedto.getTemporadas());
+            serie.setGeneros(seriedto.getGeneros());
             Serie savedSerie = serieRepo.save(serie);
 
             return new  SerieDTO(
                     savedSerie.getTitulo(),
                     savedSerie.getAnnoEstreno(),
-                    savedSerie.getGenero(),
-                    savedSerie.getNumCaps(),
                     savedSerie.getActores(),
-                    savedSerie.getDirectors()
+                    savedSerie.getDirectors(),
+                    savedSerie.getTemporadas(),
+                    savedSerie.getGeneros()
             );
         }catch(Exception e){
             throw new RuntimeException(
@@ -108,19 +108,19 @@ public class SerieService {
                     ));
             existing.setTitulo(seriedto.getTitulo());
             existing.setAnnoEstreno(seriedto.getAnnoEstreno());
-            existing.setGenero(seriedto.getGenero());
-            existing.setNumCaps(seriedto.getNumCaps());
             existing.setActores(seriedto.getActores());
             existing.setDirectors(seriedto.getDirectores());
+            existing.setTemporadas(seriedto.getTemporadas());
+            existing.setGeneros(seriedto.getGeneros());
             Serie updatedSerie = serieRepo.save(existing);
 
-            return new  SerieDTO(
+            return new SerieDTO(
                     updatedSerie.getTitulo(),
                     updatedSerie.getAnnoEstreno(),
-                    updatedSerie.getGenero(),
-                    updatedSerie.getNumCaps(),
                     updatedSerie.getActores(),
-                    updatedSerie.getDirectors()
+                    updatedSerie.getDirectors(),
+                    updatedSerie.getTemporadas(),
+                    updatedSerie.getGeneros()
             );
         }catch(Exception e){
             throw new RuntimeException(

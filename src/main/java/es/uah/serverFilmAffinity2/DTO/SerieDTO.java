@@ -2,26 +2,27 @@ package es.uah.serverFilmAffinity2.DTO;
 
 import es.uah.serverFilmAffinity2.model.Actor;
 import es.uah.serverFilmAffinity2.model.Director;
+import es.uah.serverFilmAffinity2.model.Temporada;
 
 import java.util.List;
 
 public class SerieDTO {
     private String titulo;
     private String annoEstreno;
-    private String genero;
-    private Integer numCaps;
     private List<Actor> actores;
     private List<Director> directores;
+    private List<Temporada> temporadas;
+    private List<String> generos;
 
     public SerieDTO(String titulo, String annoEstreno,
-                    String genero, Integer numCaps,
-                    List<Actor> actores, List<Director> directores) {
+                    List<Actor> actores, List<Director> directores,
+                    List<Temporada> temporadas, List<String> generos) {
         this.titulo = titulo;
         this.annoEstreno = annoEstreno;
-        this.genero = genero;
-        this.numCaps = numCaps;
         this.actores = actores;
         this.directores = directores;
+        this.temporadas = temporadas;
+        this.generos = generos;
     }
 
     public String getTitulo() {
@@ -40,22 +41,6 @@ public class SerieDTO {
         this.annoEstreno = annoEstreno;
     }
 
-    public String getGenero() {
-        return genero;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
-
-    public Integer getNumCaps() {
-        return numCaps;
-    }
-
-    public void setNumCaps(Integer numCaps) {
-        this.numCaps = numCaps;
-    }
-
     public List<Actor> getActores() {
         return actores;
     }
@@ -70,5 +55,21 @@ public class SerieDTO {
 
     public void setDirectores(List<Director> directores) {
         this.directores = directores;
+    }
+
+    public List<Temporada> getTemporadas() {
+        return temporadas;
+    }
+
+    public void setTemporadas(List<Temporada> temporadas) {
+        this.temporadas = temporadas;
+    }
+
+    public List<String> getGeneros() {
+        return generos;
+    }
+
+    public void setGeneros(List<String> generos) {
+        this.generos = generos;
     }
 }
