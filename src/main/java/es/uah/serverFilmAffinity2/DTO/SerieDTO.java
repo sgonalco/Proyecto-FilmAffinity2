@@ -10,18 +10,18 @@ public class SerieDTO {
     private String annoEstreno;
     private String genero;
     private Integer numCaps;
-    private List<Actor> actors;
-    private List<Director> directors;
+    private List<Actor> actores;
+    private List<Director> directores;
 
     public SerieDTO(String titulo, String annoEstreno,
                     String genero, Integer numCaps,
-                    List<Actor> actors, List<Director> directors) {
+                    List<Actor> actores, List<Director> directores) {
         this.titulo = titulo;
         this.annoEstreno = annoEstreno;
         this.genero = genero;
         this.numCaps = numCaps;
-        this.actors = actors;
-        this.directors = directors;
+        this.actores = actores;
+        this.directores = directores;
     }
 
     public String getTitulo() {
@@ -56,19 +56,19 @@ public class SerieDTO {
         this.numCaps = numCaps;
     }
 
-    public List<Actor> getActors() {
-        return actors;
+    public List<Actor> getActores() {
+        return actores;
     }
 
-    public void setActors(List<Actor> actors) {
-        this.actors = actors;
+    public void setActores(List<Actor> actores) {
+        this.actores = actores;
     }
 
-    public List<Director> getDirectors() {
-        return directors;
+    public List<Director> getDirectores() {
+        return directores;
     }
 
-    public void setDirectors(List<Director> directors) {
-        this.directors = directors;
+    public void setDirectores(List<Director> directores) {
+        this.directores = directores;
     }
 }

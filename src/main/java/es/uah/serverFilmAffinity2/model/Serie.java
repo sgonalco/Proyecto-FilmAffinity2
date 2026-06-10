@@ -42,7 +42,7 @@ public class Serie {
             joinColumns = @JoinColumn(name = "serie_id"),
             inverseJoinColumns = @JoinColumn(name = "director_id")
     )
-    private List<Director> directors;
+    private List<Director> directores;
 
     public String getTitulo() {
         return titulo;
@@ -85,11 +85,11 @@ public class Serie {
     }
 
     public List<Director> getDirectors() {
-        return directors;
+        return directores;
     }
 
     public void setDirectors(List<Director> directors) {
-        this.directors = directors;
+        this.directores = directors;
     }
 
     public Integer getId() {
