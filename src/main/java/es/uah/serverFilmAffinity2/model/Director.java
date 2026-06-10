@@ -29,6 +29,9 @@ public class Director {
                 inverseJoinColumns = @JoinColumn(name = "pelicula_id"))
     private List<Pelicula> peliculas;
 
+    @ManyToMany(mappedBy = "directores")
+    private List<Serie> series;
+
     public Integer getId() {
         return id;
     }
@@ -59,5 +62,13 @@ public class Director {
 
     public void setPeliculas(List<Pelicula> peliculas) {
         this.peliculas = peliculas;
+    }
+
+    public List<Serie> getSeries() {
+        return series;
+    }
+
+    public void setSeries(List<Serie> series) {
+        this.series = series;
     }
 }

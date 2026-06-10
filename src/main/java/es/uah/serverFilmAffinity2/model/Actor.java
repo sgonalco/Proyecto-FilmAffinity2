@@ -29,6 +29,9 @@ public class Actor {
     @JsonIgnoreProperties("actores")
     private List<Pelicula> peliculas;
 
+    @ManyToMany(mappedBy = "actores")
+    private List<Serie> series;
+
     public Integer getId() {
         return id;
     }
@@ -73,6 +76,14 @@ public class Actor {
         if (pelicula != null){
             getPeliculas().add(pelicula);
         }
+    }
+
+    public List<Serie> getSeries() {
+        return series;
+    }
+
+    public void setSeries(List<Serie> series) {
+        this.series = series;
     }
 
     @Override
