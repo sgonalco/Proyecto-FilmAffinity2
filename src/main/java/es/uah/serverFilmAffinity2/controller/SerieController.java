@@ -53,6 +53,24 @@ public class SerieController {
         }
     }
 
+    @GetMapping("/{titulo}")
+    public SerieDTO getByTitulo(@PathVariable String titulo){
+        try{
+            if(titulo == null){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "nombre no puede ser nulo"
+                );
+            }
+            return serieService.findByTitulo(titulo);
+        }catch(Exception ex){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ex.getMessage()
+            );
+        }
+    }
+
     @PostMapping("/crear")
     public SerieDTO createSerie(@RequestBody SerieDTO serieDTO){
         try{
@@ -81,6 +99,42 @@ public class SerieController {
                 );
             }
             return serieService.update(id, serieDTO);
+        }catch(Exception ex){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ex.getMessage()
+            );
+        }
+    }
+
+    @GetMapping("/{titulo}/{nombreActor}")
+    public boolean checkActor(@PathVariable String titulo, @PathVariable String nombreActor){
+        try{
+            if(titulo == null || nombreActor == null){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "nombres de serie o actor no puede ser nulos"
+                );
+            }
+            return serieService.checkActor(titulo, nombreActor);
+        }catch(Exception ex){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ex.getMessage()
+            );
+        }
+    }
+
+    @GetMapping("/contador de capitulos/{titulo}")
+    public Integer contarCapitulos(@PathVariable String titulo){
+        try{
+            if(titulo == null || titulo.isEmpty()){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "nombre no puede ser nulo"
+                );
+            }
+            return serieService.contarEpisodios(titulo);
         }catch(Exception ex){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,

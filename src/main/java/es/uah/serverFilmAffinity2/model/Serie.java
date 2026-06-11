@@ -36,7 +36,7 @@ public class Serie {
     )
     private List<Director> directores;
 
-    @ElementCollection
+    @ElementCollection // QUE SEA UN ENUM!!!
     @CollectionTable(
             name = "series_genero",
             joinColumns = @JoinColumn(name = "serie_id")
