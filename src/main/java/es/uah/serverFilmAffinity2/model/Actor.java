@@ -8,19 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "actores")
-public class Actor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
-
-    @NotBlank(message = "Actor name cannot be empty")
-    @Size(max = 120)
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
-
-    @Column(name = "fecha_nacimiento")
-    private String fechaNacimiento;
+public class Actor extends ProfesionalCine{
 
     @Column(name = "pais_nacimiento", length = 80)
     private String paisNacimiento;
@@ -32,6 +20,11 @@ public class Actor {
     @ManyToMany(mappedBy = "actores", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("actores")
     private List<Serie> series;
+
+    @Override
+    public List<Serie> ObtenerFilmografiaSeries(){
+        return series;
+    };
 
     public Integer getId() {
         return id;

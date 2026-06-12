@@ -1,26 +1,12 @@
 package es.uah.serverFilmAffinity2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "directores")
-public class Director {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
-
-    @NotBlank(message = "name cannot be blank")
-    @Size(max = 120)
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
-
-    @Column(name = "fecha_nacimiento")
-    private String fechaNacimiento;
+public class Director extends ProfesionalCine {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnoreProperties("directores")
@@ -32,6 +18,11 @@ public class Director {
     @ManyToMany(mappedBy = "directores", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("directores")
     private List<Serie> series;
+
+    @Override
+    public List<Serie> ObtenerFilmografiaSeries(){
+        return series;
+    };
 
     public Integer getId() {
         return id;
