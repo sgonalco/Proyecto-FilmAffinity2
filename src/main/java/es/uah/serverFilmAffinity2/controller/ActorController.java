@@ -1,6 +1,7 @@
 package es.uah.serverFilmAffinity2.controller;
 
 import es.uah.serverFilmAffinity2.DTO.ActorDTO;
+import es.uah.serverFilmAffinity2.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,11 +57,10 @@ public class ActorController {
     }
 
     @GetMapping("/nombre/{nombre}") // find by name
-    public ActorDTO getByName(@PathVariable String nombre) {
+    public ActorDTO getByName(@PathVariable String nombre) throws ResourceNotFoundException {
         try {
             if(nombre == null || nombre.isBlank()){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
+                throw new ResourceNotFoundException(
                         "Nombre no puede ser nulo"
                 );
             }

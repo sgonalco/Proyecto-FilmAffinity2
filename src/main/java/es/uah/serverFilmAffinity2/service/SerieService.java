@@ -3,6 +3,7 @@ package es.uah.serverFilmAffinity2.service;
 import es.uah.serverFilmAffinity2.DAO.ActorRepo;
 import es.uah.serverFilmAffinity2.DAO.SerieRepo;
 import es.uah.serverFilmAffinity2.DTO.SerieDTO;
+import es.uah.serverFilmAffinity2.exceptions.ResourceNotFoundException;
 import es.uah.serverFilmAffinity2.model.Actor;
 import es.uah.serverFilmAffinity2.model.Serie;
 import es.uah.serverFilmAffinity2.model.Temporada;
@@ -25,7 +26,7 @@ public class SerieService {
         try{ // PRUEBA: si series vacia devolver excepcion personalizadas
             List<Serie> series = serieRepo.findAll();
             if(series.isEmpty()){
-                throw new RuntimeException(
+                throw new ResourceNotFoundException(
                         "Lista de series vacia"
                 );
             }
@@ -48,13 +49,13 @@ public class SerieService {
     public SerieDTO findById(Integer id){
         try{
             if(id == null){
-                throw new RuntimeException(
-                        "Id de entrada no puede ser nulo"
+                throw new ResourceNotFoundException(
+                        "El id de la serie no puede ser nulo"
                 );
             }
             Serie serie = serieRepo.findById(id).
-                    orElseThrow(() ->  new RuntimeException(
-                            "Serie no encontrado")
+                    orElseThrow(() ->  new ResourceNotFoundException(
+                            "serie con id: " + id + " no encontrado")
                     );
             return new SerieDTO(
                     serie.getTitulo(),
@@ -74,13 +75,13 @@ public class SerieService {
     public SerieDTO findByTitulo(String titulo){
         try{
             if(titulo == null || titulo.isBlank()){
-                throw new RuntimeException(
-                        "Serie no puede estar en blanco"
+                throw new ResourceNotFoundException(
+                        "titulo no puede estar en blanco"
                 );
             }
             Serie serie = serieRepo.findByTitulo(titulo)
-                    .orElseThrow(() ->  new RuntimeException(
-                            "Serie no encontrado"
+                    .orElseThrow(() ->  new ResourceNotFoundException(
+                            "Serie con titulo: " + titulo + " no encontrado"
                     ));
             SerieDTO serieDTO = new SerieDTO(
                     serie.getTitulo(),
@@ -108,12 +109,12 @@ public class SerieService {
                 );
             }
             Actor actor = actorRepo.findByNombre(nombreActor).
-                    orElseThrow(() ->  new RuntimeException(
-                            "Actor no encontrado"
+                    orElseThrow(() ->  new ResourceNotFoundException(
+                            "Actor con nombre: " + nombreActor + " no encontrado"
                     ));
             Serie serie = serieRepo.findByTitulo(titulo)
-                    .orElseThrow(() ->  new RuntimeException(
-                            "Serie no encontrada"
+                    .orElseThrow(() ->  new ResourceNotFoundException(
+                            "Serie con titulo: " +  titulo + " no encontrado"
                     ));
             List<Actor> repartoSerie = serie.getActores();
             if(repartoSerie.contains(actor)){
@@ -133,7 +134,7 @@ public class SerieService {
             // puede ser metodo booleano para comprobar transaccion O un void
             Serie serie = new Serie();
             if(seriedto == null){
-                throw new RuntimeException(
+                throw new ResourceNotFoundException(
                         "objeto seriedto no puede ser nulo"
                 );
             }
@@ -165,12 +166,12 @@ public class SerieService {
             // devuelve valores, nunca mensajes. INTEGER
             int contadorEps = 0;
             if(titulo == null || titulo.isBlank()){
-                throw new RuntimeException(
+                throw new ResourceNotFoundException(
                         "Serie no puede estar en blanco"
                 );
             }
             Serie serie = serieRepo.findByTitulo(titulo)
-                    .orElseThrow(() ->  new RuntimeException(
+                    .orElseThrow(() ->  new ResourceNotFoundException(
                             "Serie no encontrada"
                     ));
             List<Temporada> temporadas = serie.getTemporadas();
@@ -190,18 +191,18 @@ public class SerieService {
         try{
             // mejor devuelve booleano.
             if(id == null){
-                throw new RuntimeException(
+                throw new ResourceNotFoundException(
                         "id del objeto no puede ser nulo"
                 );
             }
             if(seriedto == null){
-                throw new RuntimeException(
+                throw new ResourceNotFoundException(
                         "objeto seriedto no puede ser nulo"
                 );
             }
             Serie existing = serieRepo.findById(id)
-                    .orElseThrow(() -> new RuntimeException(
-                        "Serie no encontrado"
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                        "Serie con id: " + id + " no encontrado"
                     ));
             existing.setTitulo(seriedto.getTitulo());
             existing.setAnnoEstreno(seriedto.getAnnoEstreno());

@@ -1,10 +1,13 @@
 package es.uah.serverFilmAffinity2.service;
 
 import es.uah.serverFilmAffinity2.DTO.ActorDTO;
+import es.uah.serverFilmAffinity2.exceptions.ResourceNotFoundException;
 import es.uah.serverFilmAffinity2.model.Actor;
 import es.uah.serverFilmAffinity2.DAO.ActorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,8 +21,8 @@ public class ActorService {
         try{
             List<Actor> actores = actorRepo.findAll();
             if(actores.isEmpty()){
-                throw new RuntimeException(
-                        "Lista de actores no encontrada"
+                throw new ResourceNotFoundException(
+                        "Lista de actores vacia"
                 );
             }
             return actores.stream()
@@ -40,12 +43,12 @@ public class ActorService {
     public ActorDTO findByNombre(String nombre) {
         try{
             if(nombre == null || nombre.isBlank()){
-                throw new RuntimeException(
+                throw new ResourceNotFoundException(
                         "El nombre del actor no puede ser nulo"
                 );
             }
             Actor actor = actorRepo.findByNombre(nombre)
-                    .orElseThrow(() -> new RuntimeException("Actor no encontrado"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Actor: " + nombre + " no encontrado"));
             ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
                     actor.getFechaNacimiento(),
                     actor.getPaisNacimiento(),
@@ -62,11 +65,14 @@ public class ActorService {
     public ActorDTO findById(Integer id) {
         try{
             if(id == null){
-                throw new RuntimeException(
+                throw new ResourceNotFoundException(
                         "El id del actor no puede ser nulo"
                 );
             }
-            Actor actor = actorRepo.findById(id).orElseThrow(() -> new RuntimeException("Actor no encontrado"));;
+            Actor actor = actorRepo.findById(id).
+                    orElseThrow(() -> new ResourceNotFoundException(
+                            "Actor con id: " + id + " no encontrado"
+                    ));;
             ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
                     actor.getFechaNacimiento(),
                     actor.getPaisNacimiento(),
@@ -83,7 +89,7 @@ public class ActorService {
     public ActorDTO save(ActorDTO actordto) {
         try{
             if(actordto == null){
-                throw new RuntimeException(
+                throw new ResourceNotFoundException(
                         "El actor no puede ser nulo"
                 );
             }
@@ -110,13 +116,15 @@ public class ActorService {
 
     public ActorDTO updateActor(Integer id, ActorDTO actordto) {
         try{
-            if(id == null){
-                throw new RuntimeException(
-                        "El id del actor no puede ser nulo"
+            if(id == null || actordto == null){
+                throw new ResourceNotFoundException(
+                        "id o dto no pueden ser nulos"
                 );
             }
             Actor existing = actorRepo.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Actor no encontrado"));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Actor con id: " + id + " no encontrado"
+                    ));
             existing.setNombre(actordto.getNombre());
             existing.setPaisNacimiento(actordto.getPaisNacimiento());
             existing.setFechaNacimiento(actordto.getFechanacimiento());
