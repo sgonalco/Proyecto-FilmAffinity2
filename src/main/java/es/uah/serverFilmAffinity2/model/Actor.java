@@ -25,11 +25,12 @@ public class Actor {
     @Column(name = "pais_nacimiento", length = 80)
     private String paisNacimiento;
 
-    @ManyToMany(mappedBy = "actores")
+    @ManyToMany(mappedBy = "actores", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("actores")
     private List<Pelicula> peliculas;
 
-    @ManyToMany(mappedBy = "actores")
+    @ManyToMany(mappedBy = "actores", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("actores")
     private List<Serie> series;
 
     public Integer getId() {

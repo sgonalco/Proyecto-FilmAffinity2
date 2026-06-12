@@ -53,7 +53,7 @@ public class SerieController {
         }
     }
 
-    @GetMapping("/{titulo}")
+    @GetMapping("/titulo/{titulo}")
     public SerieDTO getByTitulo(@PathVariable String titulo){
         try{
             if(titulo == null){

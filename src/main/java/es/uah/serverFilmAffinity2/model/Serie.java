@@ -1,5 +1,6 @@
 package es.uah.serverFilmAffinity2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Serie {
     @Column(name = "annoEstreno")
     private String annoEstreno;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "series_actor",
             joinColumns = @JoinColumn(name = "serie_id"),
@@ -28,7 +29,8 @@ public class Serie {
     )
     private List<Actor> actores;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("series")
     @JoinTable(
             name = "series_director",
             joinColumns = @JoinColumn(name = "serie_id"),
@@ -47,7 +49,8 @@ public class Serie {
     @OneToMany(
             mappedBy = "serie",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
     )
     private List<Temporada> temporadas;
 

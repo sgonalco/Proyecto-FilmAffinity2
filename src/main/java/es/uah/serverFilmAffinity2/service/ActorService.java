@@ -27,7 +27,8 @@ public class ActorService {
                             actor.getNombre(),
                             actor.getFechaNacimiento(),
                             actor.getPaisNacimiento(),
-                            actor.getPeliculas()))
+                            List.of()//actor.getPeliculas()
+                    ))
                     .toList();
         }catch(Exception e){
             throw new RuntimeException(
@@ -48,7 +49,8 @@ public class ActorService {
             ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
                     actor.getFechaNacimiento(),
                     actor.getPaisNacimiento(),
-                    actor.getPeliculas());
+                    List.of()//actor.getPeliculas()
+            );
             return actorDTO;
         }catch(Exception e){
             throw new RuntimeException(
@@ -68,7 +70,8 @@ public class ActorService {
             ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
                     actor.getFechaNacimiento(),
                     actor.getPaisNacimiento(),
-                    actor.getPeliculas());
+                    List.of()//actor.getPeliculas()
+            );
             return actorDTO;
         }catch(Exception e){
             throw new RuntimeException(
@@ -96,7 +99,7 @@ public class ActorService {
                     savedActor.getNombre(),
                     savedActor.getFechaNacimiento(),
                     savedActor.getPaisNacimiento(),
-                    savedActor.getPeliculas()
+                    List.of()//savedActor.getPeliculas()
             );
         }catch(Exception e){
             throw new RuntimeException(
@@ -117,7 +120,7 @@ public class ActorService {
             existing.setNombre(actordto.getNombre());
             existing.setPaisNacimiento(actordto.getPaisNacimiento());
             existing.setFechaNacimiento(actordto.getFechanacimiento());
-            existing.setPeliculas(actordto.getPeliculas());
+            existing.setPeliculas(List.of());
 
             Actor savedActor = actorRepo.save(existing);
 
@@ -125,7 +128,7 @@ public class ActorService {
                     savedActor.getNombre(),
                     savedActor.getFechaNacimiento(),
                     savedActor.getPaisNacimiento(),
-                    savedActor.getPeliculas()
+                    List.of()//savedActor.getPeliculas()
             );
         }catch(Exception e){
             throw new RuntimeException(

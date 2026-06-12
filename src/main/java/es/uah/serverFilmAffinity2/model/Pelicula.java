@@ -40,14 +40,14 @@ public class Pelicula {
     @Column(name = "portada")
     private String portada;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnoreProperties("peliculas")
     @JoinTable(name = "reparto",
                 joinColumns = @JoinColumn(name = "pelicula_id"),
                 inverseJoinColumns = @JoinColumn(name = "actor_id"))
     private List<Actor> actores;
 
-    @ManyToMany(mappedBy = "peliculas")
+    @ManyToMany(mappedBy = "peliculas", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("peliculas")
     private List<Director> directores;
 

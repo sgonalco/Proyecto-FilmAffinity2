@@ -1,5 +1,6 @@
 package es.uah.serverFilmAffinity2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,7 +17,8 @@ public class Temporada {
     @Column(name = "num_episodios", nullable = false)
     private Integer numEpisodios;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "serie_id")
     private Serie serie;
 

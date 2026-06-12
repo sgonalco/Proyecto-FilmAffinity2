@@ -33,9 +33,9 @@ public class SerieService {
                     s -> new SerieDTO(
                             s.getTitulo(),
                             s.getAnnoEstreno(),
-                            s.getActores(),
-                            s.getDirectors(),
-                            s.getTemporadas(),
+                            List.of(),//s.getActores(),
+                            List.of(),//s.getDirectors(),
+                            List.of(),//s.getTemporadas(),
                             s.getGeneros()))
                     .toList();
         }catch(Exception e){
@@ -56,15 +56,14 @@ public class SerieService {
                     orElseThrow(() ->  new RuntimeException(
                             "Serie no encontrado")
                     );
-            SerieDTO serieDTO = new SerieDTO(
+            return new SerieDTO(
                     serie.getTitulo(),
                     serie.getAnnoEstreno(),
-                    serie.getActores(),
-                    serie.getDirectores(),
-                    serie.getTemporadas(),
+                    List.of(),//serie.getActores(),
+                    List.of(),//serie.getDirectores(),
+                    List.of(),//serie.getTemporadas(),
                     serie.getGeneros()
             );
-            return serieDTO;
         }catch(Exception e){
             throw new RuntimeException(
                     e.getMessage()
@@ -86,9 +85,9 @@ public class SerieService {
             SerieDTO serieDTO = new SerieDTO(
                     serie.getTitulo(),
                     serie.getAnnoEstreno(),
-                    serie.getActores(),
-                    serie.getDirectores(),
-                    serie.getTemporadas(),
+                    List.of(),//serie.getActores(),
+                    List.of(),//serie.getDirectores(),
+                    List.of(),//serie.getTemporadas(),
                     serie.getGeneros()
             );
             return serieDTO;
@@ -149,9 +148,9 @@ public class SerieService {
             return new  SerieDTO(
                     savedSerie.getTitulo(),
                     savedSerie.getAnnoEstreno(),
-                    savedSerie.getActores(),
-                    savedSerie.getDirectors(),
-                    savedSerie.getTemporadas(),
+                    List.of(),//savedSerie.getActores(),
+                    List.of(),//savedSerie.getDirectors(),
+                    List.of(),//savedSerie.getTemporadas(),
                     savedSerie.getGeneros()
             );
         }catch(Exception e){
@@ -206,18 +205,18 @@ public class SerieService {
                     ));
             existing.setTitulo(seriedto.getTitulo());
             existing.setAnnoEstreno(seriedto.getAnnoEstreno());
-            existing.setActores(seriedto.getActores());
-            existing.setDirectors(seriedto.getDirectores());
-            existing.setTemporadas(seriedto.getTemporadas());
+            existing.setActores(List.of());
+            existing.setDirectors(List.of());
+            existing.setTemporadas(List.of());
             existing.setGeneros(seriedto.getGeneros());
             Serie updatedSerie = serieRepo.save(existing);
 
             return new SerieDTO(
                     updatedSerie.getTitulo(),
                     updatedSerie.getAnnoEstreno(),
-                    updatedSerie.getActores(),
-                    updatedSerie.getDirectors(),
-                    updatedSerie.getTemporadas(),
+                    List.of(),//updatedSerie.getActores(),
+                    List.of(),//updatedSerie.getDirectors(),
+                    List.of(),//updatedSerie.getTemporadas(),
                     updatedSerie.getGeneros()
             );
         }catch(Exception e){

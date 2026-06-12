@@ -22,14 +22,15 @@ public class Director {
     @Column(name = "fecha_nacimiento")
     private String fechaNacimiento;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnoreProperties("directores")
     @JoinTable(name = "pelicula_director",
                 joinColumns = @JoinColumn(name = "director_id"),
                 inverseJoinColumns = @JoinColumn(name = "pelicula_id"))
     private List<Pelicula> peliculas;
 
-    @ManyToMany(mappedBy = "directores")
+    @ManyToMany(mappedBy = "directores", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("directores")
     private List<Serie> series;
 
     public Integer getId() {
