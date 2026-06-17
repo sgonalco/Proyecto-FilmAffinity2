@@ -105,6 +105,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+		<!-- TESTING -->
 	</dependencies>
 
 	<build>
@@ -113,6 +114,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<!-- JACOCO -->
 		</plugins>
 	</build>
 
