@@ -5,9 +5,7 @@ import es.uah.serverFilmAffinity2.exceptions.ResourceNotFoundException;
 import es.uah.serverFilmAffinity2.model.Actor;
 import es.uah.serverFilmAffinity2.DAO.ActorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -96,7 +94,7 @@ public class ActorService {
             Actor actor = new Actor();
             actor.setNombre(actordto.getNombre());
             actor.setPaisNacimiento(actordto.getPaisNacimiento());
-            actor.setFechaNacimiento(actordto.getFechanacimiento());
+            actor.setFechaNacimiento(actordto.getFechaNacimiento());
             actor.setPeliculas(actordto.getPeliculas());
 
             Actor savedActor = actorRepo.save(actor);
@@ -127,7 +125,7 @@ public class ActorService {
                     ));
             existing.setNombre(actordto.getNombre());
             existing.setPaisNacimiento(actordto.getPaisNacimiento());
-            existing.setFechaNacimiento(actordto.getFechanacimiento());
+            existing.setFechaNacimiento(actordto.getFechaNacimiento());
             existing.setPeliculas(List.of());
 
             Actor savedActor = actorRepo.save(existing);

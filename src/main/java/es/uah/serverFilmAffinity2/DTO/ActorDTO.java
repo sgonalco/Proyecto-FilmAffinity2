@@ -26,7 +26,7 @@ public class ActorDTO {
         this.nombre = nombre;
     }
 
-    public String getFechanacimiento() {
+    public String getFechaNacimiento() {
         return fechanacimiento;
     }
 
