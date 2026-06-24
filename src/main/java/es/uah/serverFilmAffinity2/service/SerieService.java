@@ -72,37 +72,26 @@ public class SerieService {
     }
 
     public boolean checkActor(String titulo, String nombreActor){
-        try{
-            // tiene que ser con booleano. cambiar nombre (check).
-            boolean flagActua = false;
-            if(nombreActor.isBlank()){
-                throw new RuntimeException(
-                        "Nombre de actor no puede ser vacio"
-                );
-            }
-            Actor actor = actorRepo.findByNombre(nombreActor).
-                    orElseThrow(() ->  new ResourceNotFoundException(
-                            "Actor con nombre: " + nombreActor + " no encontrado"
-                    ));
-            Serie serie = serieRepo.findByTitulo(titulo)
-                    .orElseThrow(() ->  new ResourceNotFoundException(
-                            "Serie con titulo: " +  titulo + " no encontrado"
-                    ));
-            List<Actor> repartoSerie = serie.getActores();
-            if(repartoSerie.contains(actor)){
-                flagActua = true;
-            }
-            return flagActua;
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
-            );
+        // tiene que ser con booleano. cambiar nombre (check).
+        boolean flagActua = false;
+        Actor actor = actorRepo.findByNombre(nombreActor).
+                orElseThrow(() ->  new ResourceNotFoundException(
+                        "Actor con nombre: " + nombreActor + " no encontrado"
+                ));
+        Serie serie = serieRepo.findByTitulo(titulo)
+                .orElseThrow(() ->  new ResourceNotFoundException(
+                        "Serie con titulo: " +  titulo + " no encontrado"
+                ));
+        List<Actor> repartoSerie = serie.getActores();
+        if(repartoSerie.contains(actor)){
+            flagActua = true;
         }
+        return flagActua;
     }
 
     @Transactional
     public SerieDTO save(SerieDTO seriedto){
-        if(serieRepo.findByTitulo(seriedto.getTitulo())!=null){
+        if(!serieRepo.findByTitulo(seriedto.getTitulo()).isEmpty()){
             throw new ConflictException(
                     "Ya existe una serie con el mismo titulo"
             );
@@ -127,69 +116,41 @@ public class SerieService {
     }
 
     public Integer contarEpisodios(String titulo){
-        try{
-            // devuelve valores, nunca mensajes. INTEGER
-            int contadorEps = 0;
-            if(titulo == null || titulo.isBlank()){
-                throw new ResourceNotFoundException(
-                        "Serie no puede estar en blanco"
-                );
-            }
-            Serie serie = serieRepo.findByTitulo(titulo)
-                    .orElseThrow(() ->  new ResourceNotFoundException(
-                            "Serie no encontrada"
-                    ));
-            List<Temporada> temporadas = serie.getTemporadas();
-            for(Temporada temporada : temporadas){
-                contadorEps += temporada.getNumEpisodios();
-            }
-            return contadorEps;
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
-            );
+        // devuelve valores, nunca mensajes. INTEGER
+        int contadorEps = 0;
+        Serie serie = serieRepo.findByTitulo(titulo)
+                .orElseThrow(() ->  new ResourceNotFoundException(
+                        "Serie no encontrada"
+                ));
+        List<Temporada> temporadas = serie.getTemporadas();
+        for(Temporada temporada : temporadas){
+            contadorEps += temporada.getNumEpisodios();
         }
+        return contadorEps;
     }
 
     @Transactional
     public SerieDTO update(Integer id, SerieDTO seriedto){
-        try{
-            // mejor devuelve booleano.
-            if(id == null){
-                throw new ResourceNotFoundException(
-                        "id del objeto no puede ser nulo"
-                );
-            }
-            if(seriedto == null){
-                throw new ResourceNotFoundException(
-                        "objeto seriedto no puede ser nulo"
-                );
-            }
-            Serie existing = serieRepo.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                        "Serie con id: " + id + " no encontrado"
-                    ));
-            existing.setTitulo(seriedto.getTitulo());
-            existing.setAnnoEstreno(seriedto.getAnnoEstreno());
-            existing.setActores(List.of());
-            existing.setDirectors(List.of());
-            existing.setTemporadas(List.of());
-            existing.setGeneros(seriedto.getGeneros());
-            Serie updatedSerie = serieRepo.save(existing);
+        Serie existing = serieRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                    "Serie con id: " + id + " no encontrado"
+                ));
+        existing.setTitulo(seriedto.getTitulo());
+        existing.setAnnoEstreno(seriedto.getAnnoEstreno());
+        existing.setActores(List.of());
+        existing.setDirectors(List.of());
+        existing.setTemporadas(List.of());
+        existing.setGeneros(List.of());
+        Serie updatedSerie = serieRepo.save(existing);
 
-            return new SerieDTO(
-                    updatedSerie.getTitulo(),
-                    updatedSerie.getAnnoEstreno(),
-                    List.of(),//updatedSerie.getActores(),
-                    List.of(),//updatedSerie.getDirectors(),
-                    List.of(),//updatedSerie.getTemporadas(),
-                    updatedSerie.getGeneros()
-            );
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
-            );
-        }
+        return new SerieDTO(
+                updatedSerie.getTitulo(),
+                updatedSerie.getAnnoEstreno(),
+                List.of(),//updatedSerie.getActores(),
+                List.of(),//updatedSerie.getDirectors(),
+                List.of(),//updatedSerie.getTemporadas(),
+                updatedSerie.getGeneros()
+        );
     }
 
     @Transactional

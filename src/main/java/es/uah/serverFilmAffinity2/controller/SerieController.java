@@ -47,39 +47,14 @@ public class SerieController {
     }
 
     @GetMapping("/{titulo}/{nombreActor}")
-    public boolean checkActor(@PathVariable String titulo, @PathVariable String nombreActor){
-        try{
-            if(titulo == null || nombreActor == null){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "nombres de serie o actor no puede ser nulos"
-                );
-            }
-            return serieService.checkActor(titulo, nombreActor);
-        }catch(Exception ex){
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    ex.getMessage()
-            );
-        }
+    public boolean checkActor(@PathVariable String titulo,
+                              @PathVariable String nombreActor){
+        return serieService.checkActor(titulo,nombreActor);
     }
 
     @GetMapping("/contador de capitulos/{titulo}")
     public Integer contarCapitulos(@PathVariable String titulo){
-        try{
-            if(titulo == null || titulo.isEmpty()){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "nombre no puede ser nulo"
-                );
-            }
-            return serieService.contarEpisodios(titulo);
-        }catch(Exception ex){
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    ex.getMessage()
-            );
-        }
+        return serieService.contarEpisodios(titulo);
     }
 
     @DeleteMapping("/delete/{id}")
