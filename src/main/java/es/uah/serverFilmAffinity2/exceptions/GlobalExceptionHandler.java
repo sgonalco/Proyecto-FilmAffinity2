@@ -50,4 +50,16 @@ public class GlobalExceptionHandler {
                         message
                 ));
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiError> handleConflict(
+            ConflictException ex) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiError(
+                        409,
+                        "Conflict",
+                        ex.getMessage()
+                ));
+    }
 }

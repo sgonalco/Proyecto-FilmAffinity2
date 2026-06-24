@@ -2,8 +2,11 @@ package es.uah.serverFilmAffinity2.controller;
 
 import es.uah.serverFilmAffinity2.DTO.SerieDTO;
 import es.uah.serverFilmAffinity2.service.SerieService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -11,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/series")
+@Validated
 public class SerieController {
 
     @Autowired
@@ -18,93 +22,28 @@ public class SerieController {
 
     @GetMapping
     public List<SerieDTO> getlAll(){
-        try{
-            List<SerieDTO> series = serieService.getlAll();
-            if(series.isEmpty()){
-                throw new ResponseStatusException(
-                        HttpStatus.NO_CONTENT,
-                        "lista de serie vacia"
-                );
-            }
-            return series;
-        }catch(Exception ex){
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    ex.getMessage()
-            );
-        }
+        return serieService.getlAll();
     }
 
     @GetMapping("/{id}")
-    public SerieDTO getById(@PathVariable Integer id){
-        try{
-            if(id == null){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "id no puede ser nulo"
-                );
-            }
-            return serieService.findById(id);
-        } catch (Exception ex) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    ex.getMessage()
-            );
-        }
+    public SerieDTO getById(@PathVariable @Positive Integer id){
+        return serieService.findById(id);
     }
 
     @GetMapping("/titulo/{titulo}")
     public SerieDTO getByTitulo(@PathVariable String titulo){
-        try{
-            if(titulo == null){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "nombre no puede ser nulo"
-                );
-            }
-            return serieService.findByTitulo(titulo);
-        }catch(Exception ex){
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    ex.getMessage()
-            );
-        }
+        return serieService.findByTitulo(titulo);
     }
 
     @PostMapping("/crear")
-    public SerieDTO createSerie(@RequestBody SerieDTO serieDTO){
-        try{
-            if(serieDTO == null){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "objeto serie no puede ser nulo"
-                );
-            }
-            return serieService.save(serieDTO);
-        }catch(Exception ex){
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    ex.getMessage()
-            );
-        }
+    public SerieDTO createSerie(@RequestBody @Valid SerieDTO serieDTO){
+        return serieService.save(serieDTO);
     }
 
     @PutMapping("/update/{id}")
-    public SerieDTO update(@PathVariable Integer id, @RequestBody SerieDTO serieDTO){
-        try{
-            if(id == null || serieDTO == null){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "id u objeto no pueden ser nulos"
-                );
-            }
-            return serieService.update(id, serieDTO);
-        }catch(Exception ex){
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    ex.getMessage()
-            );
-        }
+    public SerieDTO update(@PathVariable @Positive Integer id,
+                           @RequestBody @Valid SerieDTO serieDTO){
+        return serieService.update(id, serieDTO);
     }
 
     @GetMapping("/{titulo}/{nombreActor}")

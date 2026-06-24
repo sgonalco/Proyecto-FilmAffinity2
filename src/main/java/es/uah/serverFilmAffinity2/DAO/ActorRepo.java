@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface ActorRepo extends JpaRepository<Actor, Integer> {
 
     Optional<Actor> findByNombre(String nombre);
+    Boolean existsByNombre(String nombre);
 
 }

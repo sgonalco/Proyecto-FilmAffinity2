@@ -3,6 +3,7 @@ package es.uah.serverFilmAffinity2.service;
 import es.uah.serverFilmAffinity2.DAO.ActorRepo;
 import es.uah.serverFilmAffinity2.DAO.SerieRepo;
 import es.uah.serverFilmAffinity2.DTO.SerieDTO;
+import es.uah.serverFilmAffinity2.exceptions.ConflictException;
 import es.uah.serverFilmAffinity2.exceptions.ResourceNotFoundException;
 import es.uah.serverFilmAffinity2.model.Actor;
 import es.uah.serverFilmAffinity2.model.Serie;
@@ -23,80 +24,51 @@ public class SerieService {
     private ActorRepo actorRepo;
 
     public List<SerieDTO> getlAll(){
-        try{ // PRUEBA: si series vacia devolver excepcion personalizadas
-            List<Serie> series = serieRepo.findAll();
-            if(series.isEmpty()){
-                throw new ResourceNotFoundException(
-                        "Lista de series vacia"
-                );
-            }
-            return series.stream().map(
-                    s -> new SerieDTO(
-                            s.getTitulo(),
-                            s.getAnnoEstreno(),
-                            List.of(),//s.getActores(),
-                            List.of(),//s.getDirectors(),
-                            List.of(),//s.getTemporadas(),
-                            s.getGeneros()))
-                    .toList();
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
+        List<Serie> series = serieRepo.findAll();
+        if(series.isEmpty()){
+            throw new ResourceNotFoundException(
+                    "Lista de series vacia"
             );
         }
+        return series.stream().map(
+                s -> new SerieDTO(
+                        s.getTitulo(),
+                        s.getAnnoEstreno(),
+                        List.of(),//s.getActores(),
+                        List.of(),//s.getDirectors(),
+                        List.of(),//s.getTemporadas(),
+                        s.getGeneros()))
+                .toList();
     }
 
     public SerieDTO findById(Integer id){
-        try{
-            if(id == null){
-                throw new ResourceNotFoundException(
-                        "El id de la serie no puede ser nulo"
+        Serie serie = serieRepo.findById(id).
+                orElseThrow(() ->  new ResourceNotFoundException(
+                        "serie con id: " + id + " no encontrado")
                 );
-            }
-            Serie serie = serieRepo.findById(id).
-                    orElseThrow(() ->  new ResourceNotFoundException(
-                            "serie con id: " + id + " no encontrado")
-                    );
-            return new SerieDTO(
-                    serie.getTitulo(),
-                    serie.getAnnoEstreno(),
-                    List.of(),//serie.getActores(),
-                    List.of(),//serie.getDirectores(),
-                    List.of(),//serie.getTemporadas(),
-                    serie.getGeneros()
-            );
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
-            );
-        }
+        return new SerieDTO(
+                serie.getTitulo(),
+                serie.getAnnoEstreno(),
+                List.of(),//serie.getActores(),
+                List.of(),//serie.getDirectores(),
+                List.of(),//serie.getTemporadas(),
+                serie.getGeneros()
+        );
     }
 
     public SerieDTO findByTitulo(String titulo){
-        try{
-            if(titulo == null || titulo.isBlank()){
-                throw new ResourceNotFoundException(
-                        "titulo no puede estar en blanco"
-                );
-            }
-            Serie serie = serieRepo.findByTitulo(titulo)
-                    .orElseThrow(() ->  new ResourceNotFoundException(
-                            "Serie con titulo: " + titulo + " no encontrado"
-                    ));
-            SerieDTO serieDTO = new SerieDTO(
-                    serie.getTitulo(),
-                    serie.getAnnoEstreno(),
-                    List.of(),//serie.getActores(),
-                    List.of(),//serie.getDirectores(),
-                    List.of(),//serie.getTemporadas(),
-                    serie.getGeneros()
-            );
-            return serieDTO;
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
-            );
-        }
+        Serie serie = serieRepo.findByTitulo(titulo)
+                .orElseThrow(() ->  new ResourceNotFoundException(
+                        "Serie con titulo: " + titulo + " no encontrado"
+                ));
+        return new SerieDTO(
+                serie.getTitulo(),
+                serie.getAnnoEstreno(),
+                List.of(),//serie.getActores(),
+                List.of(),//serie.getDirectores(),
+                List.of(),//serie.getTemporadas(),
+                serie.getGeneros()
+        );
     }
 
     public boolean checkActor(String titulo, String nombreActor){
@@ -130,35 +102,28 @@ public class SerieService {
 
     @Transactional
     public SerieDTO save(SerieDTO seriedto){
-        try{
-            // puede ser metodo booleano para comprobar transaccion O un void
-            Serie serie = new Serie();
-            if(seriedto == null){
-                throw new ResourceNotFoundException(
-                        "objeto seriedto no puede ser nulo"
-                );
-            }
-            serie.setTitulo(seriedto.getTitulo());
-            serie.setAnnoEstreno(seriedto.getAnnoEstreno());
-            serie.setActores(seriedto.getActores());
-            serie.setDirectors(seriedto.getDirectores());
-            serie.setTemporadas(seriedto.getTemporadas());
-            serie.setGeneros(seriedto.getGeneros());
-            Serie savedSerie = serieRepo.save(serie);
-
-            return new  SerieDTO(
-                    savedSerie.getTitulo(),
-                    savedSerie.getAnnoEstreno(),
-                    List.of(),//savedSerie.getActores(),
-                    List.of(),//savedSerie.getDirectors(),
-                    List.of(),//savedSerie.getTemporadas(),
-                    savedSerie.getGeneros()
-            );
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
+        if(serieRepo.findByTitulo(seriedto.getTitulo())!=null){
+            throw new ConflictException(
+                    "Ya existe una serie con el mismo titulo"
             );
         }
+        Serie serie = new Serie();
+        serie.setTitulo(seriedto.getTitulo());
+        serie.setAnnoEstreno(seriedto.getAnnoEstreno());
+        serie.setActores(seriedto.getActores());
+        serie.setDirectors(seriedto.getDirectores());
+        serie.setTemporadas(seriedto.getTemporadas());
+        serie.setGeneros(seriedto.getGeneros());
+        Serie savedSerie = serieRepo.save(serie);
+
+        return new  SerieDTO(
+                savedSerie.getTitulo(),
+                savedSerie.getAnnoEstreno(),
+                List.of(),//savedSerie.getActores(),
+                List.of(),//savedSerie.getDirectors(),
+                List.of(),//savedSerie.getTemporadas(),
+                savedSerie.getGeneros()
+        );
     }
 
     public Integer contarEpisodios(String titulo){
