@@ -1,6 +1,7 @@
 package es.uah.serverFilmAffinity2.service;
 
 import es.uah.serverFilmAffinity2.DTO.ActorDTO;
+import es.uah.serverFilmAffinity2.exceptions.BadRequestException;
 import es.uah.serverFilmAffinity2.exceptions.ResourceNotFoundException;
 import es.uah.serverFilmAffinity2.model.Actor;
 import es.uah.serverFilmAffinity2.DAO.ActorRepo;
@@ -16,143 +17,100 @@ public class ActorService {
     private ActorRepo actorRepo;
 
     public List<ActorDTO> findAll() {
-        try{
-            List<Actor> actores = actorRepo.findAll();
-            if(actores.isEmpty()){
-                throw new ResourceNotFoundException(
-                        "Lista de actores vacia"
-                );
-            }
-            return actores.stream()
-                    .map(actor -> new ActorDTO(
-                            actor.getNombre(),
-                            actor.getFechaNacimiento(),
-                            actor.getPaisNacimiento(),
-                            List.of()//actor.getPeliculas()
-                    ))
-                    .toList();
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
+        List<Actor> actores = actorRepo.findAll();
+        if(actores.isEmpty()){
+            throw new ResourceNotFoundException(
+                    "Lista de actores vacia"
             );
         }
-    }
-
-    public ActorDTO findByNombre(String nombre) {
-        try{
-            if(nombre == null || nombre.isBlank()){
-                throw new ResourceNotFoundException(
-                        "El nombre del actor no puede ser nulo"
-                );
-            }
-            Actor actor = actorRepo.findByNombre(nombre)
-                    .orElseThrow(() -> new ResourceNotFoundException("Actor: " + nombre + " no encontrado"));
-            ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
-                    actor.getFechaNacimiento(),
-                    actor.getPaisNacimiento(),
-                    List.of()//actor.getPeliculas()
-            );
-            return actorDTO;
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
-            );
-        }
+        return actores.stream()
+                .map(actor -> new ActorDTO(
+                        actor.getNombre(),
+                        actor.getFechaNacimiento(),
+                        actor.getPaisNacimiento(),
+                        List.of()//actor.getPeliculas()
+                ))
+                .toList();
     }
 
     public ActorDTO findById(Integer id) {
-        try{
-            if(id == null){
-                throw new ResourceNotFoundException(
-                        "El id del actor no puede ser nulo"
-                );
-            }
-            Actor actor = actorRepo.findById(id).
-                    orElseThrow(() -> new ResourceNotFoundException(
-                            "Actor con id: " + id + " no encontrado"
-                    ));;
-            ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
-                    actor.getFechaNacimiento(),
-                    actor.getPaisNacimiento(),
-                    List.of()//actor.getPeliculas()
-            );
-            return actorDTO;
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
-            );
-        }
+        Actor actor = actorRepo.findById(id).
+                orElseThrow(() -> new ResourceNotFoundException(
+                        "Actor con id: " + id + " no encontrado"
+                ));
+        ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
+                actor.getFechaNacimiento(),
+                actor.getPaisNacimiento(),
+                List.of()//actor.getPeliculas()
+        );
+        return actorDTO;
+    }
+
+    public ActorDTO findByNombre(String nombre) {
+        Actor actor = actorRepo.findByNombre(nombre)
+                .orElseThrow(() -> new ResourceNotFoundException("Actor: " + nombre + " no encontrado"));
+        ActorDTO actorDTO = new ActorDTO(actor.getNombre(),
+                actor.getFechaNacimiento(),
+                actor.getPaisNacimiento(),
+                List.of()//actor.getPeliculas()
+        );
+        return actorDTO;
     }
 
     public ActorDTO save(ActorDTO actordto) {
-        try{
-            if(actordto == null){
-                throw new ResourceNotFoundException(
-                        "El actor no puede ser nulo"
-                );
-            }
-            Actor actor = new Actor();
-            actor.setNombre(actordto.getNombre());
-            actor.setPaisNacimiento(actordto.getPaisNacimiento());
-            actor.setFechaNacimiento(actordto.getFechaNacimiento());
-            actor.setPeliculas(actordto.getPeliculas());
-
-            Actor savedActor = actorRepo.save(actor);
-
-            return new ActorDTO(
-                    savedActor.getNombre(),
-                    savedActor.getFechaNacimiento(),
-                    savedActor.getPaisNacimiento(),
-                    List.of()//savedActor.getPeliculas()
-            );
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
+        if(actordto == null){
+            throw new BadRequestException(
+                    "El objeto actor no puede ser nulo"
             );
         }
+        // agregar el metodo repo existsByNombre(actordto.getNombre()) + ConflictException
+        Actor actor = new Actor();
+        actor.setNombre(actordto.getNombre());
+        actor.setPaisNacimiento(actordto.getPaisNacimiento());
+        actor.setFechaNacimiento(actordto.getFechaNacimiento());
+        actor.setPeliculas(actordto.getPeliculas());
+
+        Actor savedActor = actorRepo.save(actor);
+
+        return new ActorDTO(
+                savedActor.getNombre(),
+                savedActor.getFechaNacimiento(),
+                savedActor.getPaisNacimiento(),
+                List.of()//savedActor.getPeliculas()
+        );
     }
 
     public ActorDTO updateActor(Integer id, ActorDTO actordto) {
-        try{
-            if(id == null || actordto == null){
-                throw new ResourceNotFoundException(
-                        "id o dto no pueden ser nulos"
-                );
-            }
-            Actor existing = actorRepo.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Actor con id: " + id + " no encontrado"
-                    ));
-            existing.setNombre(actordto.getNombre());
-            existing.setPaisNacimiento(actordto.getPaisNacimiento());
-            existing.setFechaNacimiento(actordto.getFechaNacimiento());
-            existing.setPeliculas(List.of());
-
-            Actor savedActor = actorRepo.save(existing);
-
-            return new ActorDTO(
-                    savedActor.getNombre(),
-                    savedActor.getFechaNacimiento(),
-                    savedActor.getPaisNacimiento(),
-                    List.of()//savedActor.getPeliculas()
-            );
-        }catch(Exception e){
-            throw new RuntimeException(
-                    e.getMessage()
+        if(id == null || actordto == null){
+            throw new BadRequestException(
+                    "id o dto no pueden ser nulos"
             );
         }
+        Actor existing = actorRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Actor con id: " + id + " no encontrado"
+                ));
+        existing.setNombre(actordto.getNombre());
+        existing.setPaisNacimiento(actordto.getPaisNacimiento());
+        existing.setFechaNacimiento(actordto.getFechaNacimiento());
+        existing.setPeliculas(List.of());
+
+        Actor savedActor = actorRepo.save(existing);
+
+        return new ActorDTO(
+                savedActor.getNombre(),
+                savedActor.getFechaNacimiento(),
+                savedActor.getPaisNacimiento(),
+                List.of()//savedActor.getPeliculas()
+        );
     }
 
-    public boolean deleteById(Integer id) {
-        if(id == null) {
-            throw new IllegalArgumentException("id cannot be null");
-        }
-
-        if (!actorRepo.existsById(id)) {
-            return false;
-        }
-        actorRepo.deleteById(id);
-        return true;
+    public void deleteById(Integer id) {
+        Actor actor = actorRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Actor con id: " + id + " no encontrado"
+                ));
+        actorRepo.delete(actor);
     }
 
 }

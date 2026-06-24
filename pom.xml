@@ -106,6 +106,25 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 		<!-- TESTING -->
+		<!-- Source: https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>7.33.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit-platform-engine</artifactId>
+			<version>7.18.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-spring</artifactId>
+			<version>7.18.1</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
