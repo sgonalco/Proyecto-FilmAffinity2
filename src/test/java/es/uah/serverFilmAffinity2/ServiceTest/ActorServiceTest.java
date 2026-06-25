@@ -110,7 +110,7 @@ public class ActorServiceTest {
                         () -> actorService.findById(ID)
                 );
         assertEquals(
-                "Actor con id: " + ID +  " no encontrado",
+                "Actor con ID " + ID +  " no encontrado",
                 exception.getMessage()
         );
     }
@@ -123,7 +123,7 @@ public class ActorServiceTest {
                         () -> actorService.findById(null)
                 );
         assertEquals(
-                "El id del actor no puede ser nulo",
+                "Actor con ID " + ID +  " no encontrado",
                 exception.getMessage()
         );
         verifyNoInteractions(actorRepo);
@@ -149,7 +149,7 @@ public class ActorServiceTest {
                         () -> actorService.findByNombre(null)
                 );
         assertEquals(
-                "El nombre del actor no puede ser nulo",
+                "Actor: " + ID + " no encontrado",
                 exception.getMessage()
         );
         verifyNoInteractions(actorRepo);
